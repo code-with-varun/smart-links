@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Links Manager",
+  "version": "1.0.0",
+  "description": "Smart bookmark & URL manager with tags, categories, instant search, quick save, in-place edit, and one-click open.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "contextMenus"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Smart Links Manager",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

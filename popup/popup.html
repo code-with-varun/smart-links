@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Links Manager</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Smart Links</h1>
+          <span class="version-tag">PRO</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">
+          <svg id="icon-theme-dark" class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg id="icon-theme-light" class="theme-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <button id="btn-backup-open" class="icon-btn" title="Data Backup / Restore" aria-label="Data Backup">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </button>
+        <button id="btn-add-custom-link" class="btn btn-primary" title="Add New Link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Add</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quick Save Active Tab Section -->
+    <section id="quick-save-container" class="quick-save-card">
+      <div class="current-tab-info">
+        <div class="tab-favicon-wrapper">
+          <img id="current-tab-favicon" class="tab-favicon" src="" alt="favicon">
+          <div id="current-tab-favicon-fallback" class="tab-favicon-fallback hidden">🌐</div>
+        </div>
+        <div class="current-tab-text">
+          <span class="quick-label">CURRENT TAB</span>
+          <div id="current-tab-title" class="tab-title-text" title="Active Page Title">Loading current page...</div>
+        </div>
+      </div>
+      <button id="btn-quick-save" class="btn btn-quick-save" title="Save this page to Smart Links">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        <span id="quick-save-btn-text">Save Tab</span>
+      </button>
+    </section>
+
+    <!-- Search and Filter Controls -->
+    <section class="controls-section">
+      <div class="search-box">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="search-input" placeholder="Search links, tags, notes... (Press '/')" autocomplete="off" />
+        <button id="btn-search-clear" class="icon-btn search-clear-btn hidden" aria-label="Clear Search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="filter-and-sort-bar">
+        <!-- Categories horizontal list -->
+        <div class="categories-scroll" id="categories-list">
+          <!-- Populated dynamically: All, Pinned, Work, etc. -->
+        </div>
+
+        <div class="sort-wrapper">
+          <select id="sort-select" title="Sort links by">
+            <option value="recent">Recent</option>
+            <option value="az">A → Z</option>
+            <option value="clicks">Most Clicked</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sub-header info bar (Count & Category actions) -->
+    <div class="status-bar">
+      <div class="status-count">
+        <span id="links-count-badge">0 links</span>
+        <span id="active-filter-label" class="filter-indicator"></span>
+      </div>
+      <div class="status-actions">
+        <button id="btn-open-all-category" class="text-btn" title="Open all links in current filter">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>Open All</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Scrollable Links Container -->
+    <main class="links-container" id="links-container">
+      <!-- Dynamic Link Cards or Empty State injected here -->
+    </main>
+
+    <!-- Empty State Template -->
+    <div id="empty-state" class="empty-state hidden">
+      <div class="empty-illustration">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
+          <line x1="9" y1="9" x2="9.01" y2="9"></line>
+          <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+      </div>
+      <h3>No links found</h3>
+      <p id="empty-state-subtitle">Save pages you visit or add new custom bookmarks.</p>
+      <button id="btn-empty-add" class="btn btn-primary btn-sm">Add Bookmark</button>
+    </div>
+
+    <!-- Add/Edit Link Modal -->
+    <div id="link-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="modal-title">Add Smart Link</h2>
+          <button id="btn-modal-close" class="icon-btn" aria-label="Close dialog">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <form id="link-form" class="modal-form">
+          <input type="hidden" id="link-id-field" />
+          
+          <div class="form-group">
+            <label for="link-url-field">URL <span class="required">*</span></label>
+            <div class="input-with-action">
+              <input type="text" id="link-url-field" placeholder="https://example.com" required />
+              <button type="button" id="btn-fetch-tab-url" class="btn-input-action" title="Paste current tab URL">Active Tab</button>
+            </div>
+            <span id="url-error" class="form-error hidden">Please enter a valid URL</span>
+          </div>
+
+          <div class="form-group">
+            <label for="link-title-field">Title <span class="required">*</span></label>
+            <input type="text" id="link-title-field" placeholder="Descriptive link title" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="link-category-field">Category</label>
+              <div class="category-select-wrapper">
+                <select id="link-category-field">
+                  <!-- Populated from storage -->
+                </select>
+              </div>
+            </div>
+            <div class="form-group flex-1">
+              <label for="link-new-category-field">Or New Category</label>
+              <input type="text" id="link-new-category-field" placeholder="e.g. Research" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="link-tags-field">Tags <span class="label-hint">(comma separated)</span></label>
+            <input type="text" id="link-tags-field" placeholder="tools, design, ai, docs" />
+          </div>
+
+          <div class="form-group">
+            <label for="link-notes-field">Notes / Summary <span class="label-hint">(optional)</span></label>
+            <textarea id="link-notes-field" rows="2" placeholder="Key takeaways, login username or quick notes..."></textarea>
+          </div>
+
+          <div class="form-checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="link-pinned-field" />
+              <span class="custom-checkbox"></span>
+              <span class="checkbox-text">Pin to Top (Favorite ⭐)</span>
+            </label>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="btn-modal-cancel" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="btn-modal-save" class="btn btn-primary">Save Link</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Backup & Restore Modal -->
+    <div id="backup-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>Backup & Data Management</h2>
+          <button id="btn-backup-close" class="icon-btn" aria-label="Close dialog">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="backup-card">
+            <div class="backup-text">
+              <h4>Export Bookmarks</h4>
+              <p>Download all your saved smart links as a standard JSON backup file.</p>
+            </div>
+            <button id="btn-export-json" class="btn btn-secondary btn-sm">Export JSON</button>
+          </div>
+
+          <div class="backup-card">
+            <div class="backup-text">
+              <h4>Import Bookmarks</h4>
+              <p>Restore or merge links from a previous Smart Links JSON backup.</p>
+            </div>
+            <label class="btn btn-secondary btn-sm file-upload-btn">
+              Import JSON
+              <input type="file" id="import-file-input" accept=".json" class="hidden-file-input" />
+            </label>
+          </div>
+
+          <div class="danger-zone">
+            <div class="backup-text">
+              <h4 class="text-danger">Reset All Links</h4>
+              <p>Permanently remove all bookmarks and reset categories to default.</p>
+            </div>
+            <button id="btn-reset-all" class="btn btn-danger btn-sm">Clear All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
