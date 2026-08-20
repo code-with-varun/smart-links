@@ -1,6 +1,7 @@
 /**
  * Smart Links Manager - Popup Controller
- * Full CRUD, Filter, Search, Sort, Import/Export, and Theme Engine
+ * Full CRUD, Filter, Search, Sort, Import/Export, Theme Engine, and Custom Delete Confirmation
+ * Developed by Varunakshay | Company: Runit Infotech
  */
 
 // Application State
@@ -12,7 +13,8 @@ const state = {
   searchQuery: '',
   sortBy: 'recent',
   theme: 'dark',
-  editingLinkId: null
+  editingLinkId: null,
+  deletingLinkId: null
 };
 
 // DOM Elements Cache
@@ -62,6 +64,14 @@ const elements = {
   btnModalClose: document.getElementById('btn-modal-close'),
   btnModalCancel: document.getElementById('btn-modal-cancel'),
   urlError: document.getElementById('url-error'),
+
+  // Delete Confirmation Modal
+  deleteModal: document.getElementById('delete-modal'),
+  deleteTargetTitle: document.getElementById('delete-target-title'),
+  deleteTargetUrl: document.getElementById('delete-target-url'),
+  btnDeleteClose: document.getElementById('btn-delete-close'),
+  btnDeleteCancel: document.getElementById('btn-delete-cancel'),
+  btnDeleteConfirm: document.getElementById('btn-delete-confirm'),
 
   // Backup Modal
   backupModal: document.getElementById('backup-modal'),
@@ -259,6 +269,19 @@ function bindEvents() {
     await handleSaveLinkForm();
   });
 
+  // Delete Modal listeners
+  elements.btnDeleteClose.addEventListener('click', closeDeleteModal);
+  elements.btnDeleteCancel.addEventListener('click', closeDeleteModal);
+  elements.deleteModal.addEventListener('click', (e) => {
+    if (e.target === elements.deleteModal) closeDeleteModal();
+  });
+  elements.btnDeleteConfirm.addEventListener('click', async () => {
+    if (state.deletingLinkId) {
+      await handleDeleteLink(state.deletingLinkId);
+      closeDeleteModal();
+    }
+  });
+
   // Backup Modal open/close
   elements.btnBackupOpen.addEventListener('click', () => {
     elements.backupModal.classList.remove('hidden');
@@ -286,13 +309,16 @@ function bindEvents() {
       elements.searchInput.focus();
     } else if (e.key === 'Escape') {
       if (!elements.linkModal.classList.contains('hidden')) closeLinkModal();
+      if (!elements.deleteModal.classList.contains('hidden')) closeDeleteModal();
       if (!elements.backupModal.classList.contains('hidden')) elements.backupModal.classList.add('hidden');
     }
   });
 }
 
 function isModalOpen() {
-  return !elements.linkModal.classList.contains('hidden') || !elements.backupModal.classList.contains('hidden');
+  return !elements.linkModal.classList.contains('hidden') || 
+         !elements.deleteModal.classList.contains('hidden') || 
+         !elements.backupModal.classList.contains('hidden');
 }
 
 // Apply Theme
@@ -509,14 +535,14 @@ function createLinkCard(link) {
     openLinkModal(link);
   });
 
-  // Delete Button
+  // Delete Button (Triggers custom confirmation modal)
   const btnDelete = document.createElement('button');
   btnDelete.className = 'card-action-btn delete-btn';
   btnDelete.title = 'Delete Link';
   btnDelete.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
-  btnDelete.addEventListener('click', async (e) => {
+  btnDelete.addEventListener('click', (e) => {
     e.stopPropagation();
-    await handleDeleteLink(link.id);
+    openDeleteModal(link);
   });
 
   actions.appendChild(btnCopy);
@@ -609,13 +635,27 @@ async function handleTogglePin(id) {
   }
 }
 
-// Delete Link
+// Open Delete Confirmation Modal
+function openDeleteModal(link) {
+  state.deletingLinkId = link.id;
+  elements.deleteTargetTitle.textContent = link.title || 'Untitled Link';
+  elements.deleteTargetUrl.textContent = link.url;
+  elements.deleteModal.classList.remove('hidden');
+}
+
+// Close Delete Confirmation Modal
+function closeDeleteModal() {
+  elements.deleteModal.classList.add('hidden');
+  state.deletingLinkId = null;
+}
+
+// Perform Delete after confirmation
 async function handleDeleteLink(id) {
   const index = state.links.findIndex(l => l.id === id);
   if (index !== -1) {
     const deleted = state.links.splice(index, 1)[0];
     await saveLinksToStorage();
-    showToast('Deleted link');
+    showToast('Deleted bookmark');
     
     // Refresh Quick Save button if active tab matches deleted
     if (state.currentTab && state.currentTab.url.toLowerCase() === deleted.url.toLowerCase()) {
@@ -764,7 +804,11 @@ function exportLinksJson() {
     exportedAt: new Date().toISOString(),
     totalLinks: state.links.length,
     categories: state.categories,
-    links: state.links
+    links: state.links,
+    branding: {
+      developer: 'Varunakshay',
+      company: 'Runit Infotech'
+    }
   };
 
   const jsonStr = JSON.stringify(exportData, null, 2);

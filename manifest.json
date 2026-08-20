@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "Smart Links Manager",
   "version": "1.0.0",
-  "description": "Smart bookmark & URL manager with tags, categories, instant search, quick save, in-place edit, and one-click open.",
+  "author": "Varunakshay (Runit Infotech)",
+  "description": "Smart bookmark & URL manager with tags, categories, instant search, quick save, in-place edit, and one-click open. Developed by Runit Infotech.",
   "permissions": [
     "storage",
     "activeTab",

@@ -11,16 +11,17 @@ Smart Links Manager
 Smart bookmark & URL manager with tags, categories, instant search, quick save, in-place edit, and one-click open.
 
 **Detailed Description** [REQUIRED]
-Smart Links Manager is a high-performance, modern bookmark and link organizer designed to streamline your daily web workflow.
+Smart Links Manager is a modern, high-performance bookmark and URL manager designed to streamline your daily web workflow.
 
-Save any webpage with a single click, categorize links into dedicated spaces (Work, Development, Design, Reading, Tools), add searchable tags and notes, and pin your favorite daily resources to the top.
+Developed by Varunakshay for Runit Infotech, this extension helps you save, categorize, tag, and find your daily web resources with zero friction.
 
 Key Features:
 - 1-Click Save: Instantly detect and save your current active tab with title and favicon.
 - Organize by Categories & Tags: Filter links effortlessly using interactive category pills and hashtag filters.
-- Real-Time Search: Fast, instant search across link titles, domains, notes, and tags with keyboard shortcut navigation.
+- Real-Time Search: Fast, instant search across link titles, domains, notes, and tags with keyboard shortcut navigation ('/' to search).
 - Pin Favorites: Keep your high-priority links pinned right at the top of your deck.
 - In-Place Editing: Edit titles, URLs, tags, and personal notes anytime without opening separate settings pages.
+- Safe Delete Confirmation: Custom confirmation modal prevents accidental link deletion.
 - Batch Open: Open all links within a specific collection with a single click.
 - Data Backup & Migration: One-click JSON export and import for seamless backup and cross-device synchronization.
 - Dark & Light Themes: Sleek modern glassmorphic interface with automatic theme persistence.
@@ -103,8 +104,10 @@ English
 
 ## Developer Info
 
-**Publisher Name**: Antigravity Studio  
-**Support Email**: support@antigravity.dev  
+**Publisher Name**: Runit Infotech  
+**Developer**: Varunakshay  
+**Contact / Support Email**: contact@runitinfotech.com  
+**Website**: https://runitinfotech.com  
 
 ---
 
@@ -112,4 +115,4 @@ English
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
-| 1.0.0 | 2026-08-20 | Initial production release with Manifest V3, CRUD link management, category filters, quick active tab save, JSON backup/restore, and dark/light themes. | Draft |
+| 1.0.0 | 2026-08-20 | Initial production release with Manifest V3, CRUD link management, category filters, quick active tab save, JSON backup/restore, delete confirmation modal, and dark/light themes. | Draft |
